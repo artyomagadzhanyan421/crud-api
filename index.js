@@ -31,6 +31,37 @@ app.get('/jobs/:id', async (req, res) => {
     }
 });
 
+// Create a new job
+app.post('/jobs', async (req, res) => {
+    try {
+        const job = new Job(req.body);
+        await job.save();
+        res.status(201).send(job);
+    } catch (err) {
+        res.status(400).send(err);
+    }
+});
+
+// Update a job
+app.put('/jobs/:id', async (req, res) => {
+    try {
+        const job = await Job.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        res.status(200).send(job);
+    } catch (err) {
+        res.status(400).send(err);
+    }
+});
+
+// Delete a job
+app.delete('/jobs/:id', async (req, res) => {
+    try {
+        await Job.findByIdAndDelete(req.params.id);
+        res.status(200).send({ message: 'Job deleted' });
+    } catch (err) {
+        res.status(500).send(err);
+    }
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
