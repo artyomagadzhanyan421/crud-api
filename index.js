@@ -36,9 +36,9 @@ app.post('/jobs', async (req, res) => {
     try {
         const job = new Job(req.body);
         await job.save();
-        res.status(201).send(job);
+        res.status(201).send({ message: 'Job created successfully', job });
     } catch (err) {
-        res.status(400).send(err);
+        res.status(400).send({ message: 'Failed to create job', error: err.message });
     }
 });
 
@@ -46,9 +46,12 @@ app.post('/jobs', async (req, res) => {
 app.put('/jobs/:id', async (req, res) => {
     try {
         const job = await Job.findByIdAndUpdate(req.params.id, req.body, { new: true });
-        res.status(200).send(job);
+        if (!job) {
+            return res.status(404).send({ message: 'Job not found' });
+        }
+        res.status(200).send({ message: 'Job updated successfully', job });
     } catch (err) {
-        res.status(400).send(err);
+        res.status(400).send({ message: 'Failed to update job', error: err.message });
     }
 });
 
