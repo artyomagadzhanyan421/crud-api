@@ -1,14 +1,17 @@
 require('dotenv').config();
 const express = require('express');
-const cors = require('cors');
+
+const cors = require('cors'); // For React integration
+
 const connectDB = require('./mongodb/connect');
 const Job = require("./mongodb/models/jobsModel");
 
 const app = express();
+
 connectDB(); // Initialize MongoDB connection
 
 app.use(express.json());
-app.use(cors());
+app.use(cors()); // For React integration
 
 // Get all jobs
 app.get('/jobs', async (req, res) => {
